@@ -1,7 +1,6 @@
-if(process.env.NODE_ENV != "production"){
+if (process.env.NODE_ENV != "production") {
   require("dotenv").config();
 }
-
 
 const express = require("express");
 const app = express();
@@ -20,7 +19,6 @@ const User = require("./models/user.js");
 const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
-
 
 const dbUrl = process.env.ATLASDB_URL;
 
@@ -51,7 +49,7 @@ const store = MongoStore.create({
   touchAfter: 24 * 3600,
 });
 
-store.on("error", () => {
+store.on("error", (err) => {
   console.log("ERROR in MONGO SESSION STORE", err);
 });
 
@@ -84,31 +82,20 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.get("/demouser", async (req,res) => {
-//     let fakeUser = new User({
-//         email: "student@gmail.com",
-//         username: "delta-student"
-//     });
-
-//     let registeredUser = await User.register(fakeUser, "helloworld");
-//     res.send(registeredUser);
-// });
+app.get("/", (req, res) => {
+  res.send("Server is up and running!");
+});
 
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
-
-// app.all("*", (req, res, next) => {
-//     next(new ExpressError(404, "Page Not Found"));
-//   });
 
 app.use((err, req, res, next) => {
   let { statusCode = 500, message = "Something went wrong" } = err;
   res.status(statusCode).render("error.ejs", { message });
 });
 
-
-
-app.listen(8080, () => {
-  console.log("server is listening to port 8080");
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Server is listening on port ${port}`);
 });
