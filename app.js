@@ -83,7 +83,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.render("home");
+  res.render("/listings");
 });
 
 app.use("/listings", listingRouter);
