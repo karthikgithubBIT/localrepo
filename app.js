@@ -83,7 +83,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Server is up and running!");
+  res.render("home");
 });
 
 app.use("/listings", listingRouter);
